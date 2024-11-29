@@ -22,6 +22,10 @@ public class ResponseService {
 
     Method method = BeanContainer.controllerMethods.get(requestKey);
 
+    if (method == null) {
+      return httpResponseBuilder.getResponse(404, "Not found");
+    }
+
     Object instance = BeanContainer.controllers.get(method.getDeclaringClass().getName());
 
     Object responseBody = null;

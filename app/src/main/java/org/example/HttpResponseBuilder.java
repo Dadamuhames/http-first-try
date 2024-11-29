@@ -56,11 +56,13 @@ public class HttpResponseBuilder {
     return jacksonData;
   }
 
+
   public Response getResponse(final Integer status, final Object body) {
     String serializedBody = serializeResponseBody(body);
 
     return getResponse(status, serializedBody);
   }
+
 
   public Response responseEntityToResponse(final ResponseEntity<?> responseEntity) {
     String jacksonData = serializeResponseBody(responseEntity.getBody());
