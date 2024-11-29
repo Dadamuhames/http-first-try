@@ -3,30 +3,27 @@
  */
 package org.example;
 
-import java.nio.channels.Selector;
+import lombok.extern.slf4j.Slf4j;
+import org.example.factory.TCPServerFactory;
+import org.slf4j.LoggerFactory;
 
+import java.util.logging.Logger;
+
+@Slf4j
 public class App {
-
   public static void main(String[] args) {
-
     try {
       ControllersLoader controllersLoader = new ControllersLoader();
 
       controllersLoader.loadControllers();
 
-      Selector selector = Selector.open();
-      HttpRequestParser httpRequestParser = new HttpRequestParser();
-
-      HttpResponseBuilder httpResponseBuilder = new HttpResponseBuilder();
-
-      RequestHandler requestHandler = new RequestHandler(httpResponseBuilder);
-
-      TCPServer tcpServer = new TCPServer(selector, httpRequestParser, requestHandler);
+      TCPServer tcpServer = TCPServerFactory.createTCPServer();
 
       tcpServer.startServer();
 
     } catch (Exception e) {
-      e.printStackTrace();
+      System.out.println(e.getMessage());
+      log.error("Error: {}", e.getMessage());
     }
   }
 }

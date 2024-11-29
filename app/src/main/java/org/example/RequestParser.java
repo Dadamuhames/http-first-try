@@ -12,7 +12,7 @@ import org.example.dto.Request;
 import org.example.utils.HttpVersion;
 import org.example.utils.Methods;
 
-public class HttpRequestParser {
+public class RequestParser {
 
   public Methods parseMethod(final String data) throws Exception {
     try {

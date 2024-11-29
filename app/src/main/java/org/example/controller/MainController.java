@@ -1,12 +1,12 @@
 package org.example.controller;
 
-import org.example.HttpResponseBuilder;
+import java.util.Map;
 import org.example.annotation.Controller;
 import org.example.annotation.GetMethod;
+import org.example.dto.ArticleDto;
 import org.example.dto.Request;
 import org.example.dto.Response;
-
-import java.util.Map;
+import org.example.utils.ResponseEntity;
 
 @Controller("/main")
 public class MainController {
@@ -17,9 +17,16 @@ public class MainController {
   }
 
   @GetMethod("/news")
-  public Response news(final Request request) {
+  public ResponseEntity<Map<String, String>> news(final Request request) {
     Map<String, String> responseBody = Map.of("message", "success");
 
-    return HttpResponseBuilder.getResponse(200, responseBody);
+    return ResponseEntity.ok(responseBody).status(200);
+  }
+
+  @GetMethod("/article")
+  public ResponseEntity<ArticleDto> article(final Request request) {
+    ArticleDto articleDto = new ArticleDto(1L, "name");
+
+    return ResponseEntity.ok(articleDto);
   }
 }

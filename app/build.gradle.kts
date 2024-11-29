@@ -15,6 +15,12 @@ repositories {
     mavenCentral()
 }
 
+
+configurations.all {
+    exclude(module = "slf4j-log4j12")
+}
+
+
 dependencies {
     // Use JUnit test framework.
     testImplementation(libs.junit)
@@ -31,6 +37,15 @@ dependencies {
     testAnnotationProcessor("org.projectlombok:lombok:1.18.36")
 
     implementation("com.fasterxml.jackson.core:jackson-databind:2.18.1")
+
+    // https://mvnrepository.com/artifact/org.slf4j/slf4j-api
+    implementation("org.slf4j:slf4j-api:1.7.25")
+
+    implementation("org.slf4j:slf4j-log4j12:2.0.16")
+
+    testImplementation("org.slf4j:slf4j-simple:2.0.16")
+
+    runtimeOnly("ch.qos.logback:logback-classic:1.4.12")
 }
 
 // Apply a specific Java toolchain to ease working on different environments.

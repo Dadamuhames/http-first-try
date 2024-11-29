@@ -6,10 +6,13 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
 import org.example.dto.Response;
 import org.example.utils.HttpStatusService;
 import org.example.utils.HttpVersion;
+import org.example.utils.ResponseEntity;
 
+@Slf4j
 public class HttpResponseBuilder {
 
   public static Map<String, String> getHeaders() {
@@ -20,27 +23,12 @@ public class HttpResponseBuilder {
     String httpDate = ZonedDateTime.now().format(formatter);
 
     headers.put("Date", httpDate);
-    headers.put("Server", "Apache/1.3.27");
     headers.put("MIME-version", "1.0");
 
     return headers;
   }
 
-  public static Response getResponse(final Integer status, final Map<String, ?> body) {
-    ObjectMapper objectMapper = new ObjectMapper();
-    String jacksonData;
-
-    try {
-      jacksonData = objectMapper.writeValueAsString(body);
-    } catch (Exception exception) {
-      exception.printStackTrace();
-      return null;
-    }
-
-    return getResponse(status, jacksonData);
-  }
-
-  public static Response getResponse(final Integer status, final String body) {
+  public Response getResponse(final Integer status, final String body) {
     Map<String, String> headers = getHeaders();
 
     headers.put("Content-Type", "application/json");
@@ -52,6 +40,32 @@ public class HttpResponseBuilder {
         .body(body)
         .headers(headers)
         .build();
+  }
+
+  public String serializeResponseBody(final Object body) {
+    ObjectMapper objectMapper = new ObjectMapper();
+    String jacksonData;
+
+    try {
+      jacksonData = objectMapper.writeValueAsString(body);
+    } catch (Exception exception) {
+      log.error("Cannot serialize response body: {}", exception.getMessage());
+      return null;
+    }
+
+    return jacksonData;
+  }
+
+  public Response getResponse(final Integer status, final Object body) {
+    String serializedBody = serializeResponseBody(body);
+
+    return getResponse(status, serializedBody);
+  }
+
+  public Response responseEntityToResponse(final ResponseEntity<?> responseEntity) {
+    String jacksonData = serializeResponseBody(responseEntity.getBody());
+
+    return getResponse(responseEntity.getStatus(), jacksonData);
   }
 
   public String responseToString(final Response response) throws Exception {
