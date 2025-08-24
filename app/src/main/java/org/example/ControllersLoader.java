@@ -17,7 +17,6 @@ public class ControllersLoader {
     Set<String> controllers = reflections.get(Scanners.TypesAnnotated.with(Controller.class));
 
     for (String classPath : controllers) {
-
       Class<?> clazz = ClassLoader.getSystemClassLoader().loadClass(classPath);
 
       Object instance = clazz.getDeclaredConstructor().newInstance();
